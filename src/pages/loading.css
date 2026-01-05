@@ -1,0 +1,143 @@
+/* ================================
+   Loading Overlay Wrapper
+================================ */
+.loading-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  max-width: 90%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  z-index: 2000;
+  font-family: "Open Sans", "Inter", sans-serif;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.4s forwards;
+}
+
+/* Fade-out effect when loading completes */
+.loading-overlay.fade-out {
+  animation: fadeOut 0.4s forwards;
+}
+
+/* Title */
+.loading-title {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Spinner */
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-top: 4px solid #00d4ff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 14px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Progress bar container */
+.progress-container {
+  width: 100%;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #00d4ff;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-percent {
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+/* Log messages container */
+.log-messages {
+  max-height: 160px;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: left;
+  font-size: 0.85rem;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.log-message {
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+/* Scrollbar Styling */
+.log-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-messages::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.log-messages::-webkit-scrollbar-thumb {
+  background-color: #00d4ff;
+  border-radius: 6px;
+}
+
+
+
+/* ================================
+   Responsive Adjustments
+================================ */
+@media (max-width: 915px) {
+  .loading-overlay {
+    width: 65%;
+    padding: 16px 18px;
+    border-radius: 10px;
+  }
+
+  .loading-title {
+    font-size: 1rem;
+  }
+
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
+  }
+
+  .progress-container {
+    height: 8px;
+  }
+
+  .progress-percent,
+  .log-messages {
+    font-size: 0.75rem;
+  }
+
+  .log-messages {
+    max-height: 120px;
+  }
+}
