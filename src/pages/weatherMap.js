@@ -10,15 +10,13 @@ import SearchBar from "./search";
 import { useLakeLayer } from "./lakes";
 import Hotkey from "./Hotkey";
 import MapLegend from "./MapLegend";
-import LayersToggle from "./LayersToggle";
 import BetaPopup from "./popup";
 import { useLandslideLayer } from "./landslide";
 
-// cd /Users/seanfagan/Desktop/norsk-forecast
-//
+// cd /Users/seanfagan/Desktop/OGI
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoibWFwZmVhbjIiLCJhIjoiY21pcW15czFtMDBwMjNkcTVnMGhhYjR5dyJ9.VgAM8pGsqn--nTvsiWn9NQ";
+  "pk.eyJ1IjoibWFwZmVhbjIiLCJhIjoiY21peG55YTE0MDZubTNlb2w3c3RjbWYzaiJ9.05fhIFgLtef-7ZpzX8ks8g";
 
 const WeatherStationsMap = () => {
   const mapContainer = useRef(null);
@@ -48,7 +46,7 @@ const WeatherStationsMap = () => {
     const map = mapRef.current;
     if (!map) return;
     map.flyTo({
-      center: [7.312, 62.2583],
+      center: [-121.76721, 44.65492],
         zoom: 9.5,
       speed: 2.2,
       pitch: DEFAULT_PITCH,
@@ -56,7 +54,7 @@ const WeatherStationsMap = () => {
     setPitch(DEFAULT_PITCH);
   };
 
-  // Reset zoom on “R”
+
   useEffect(() => {
     const handleKeydown = (e) => {
       if (e.key.toLowerCase() === "r") resetZoom();
@@ -65,7 +63,6 @@ const WeatherStationsMap = () => {
     return () => window.removeEventListener("keydown", handleKeydown);
   }, []);
 
-  // Sync pitch with Mapbox map
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -80,7 +77,6 @@ const WeatherStationsMap = () => {
     };
   }, []);
 
-  // Initialize Map
   useEffect(() => {
     const initMap = async () => {
       if (mapRef.current) return;
@@ -93,15 +89,15 @@ const WeatherStationsMap = () => {
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/satellite-streets-v12",
-        center: [7.312, 62.2583],
-        zoom: 9.5,
+        center: [-121.76721, 44.65492],
+        zoom: 5.5,
         pitch: DEFAULT_PITCH,
       });
 
       await new Promise((resolve) => mapRef.current.on("load", resolve));
       updateProgress("Mapbox map fully loaded", step++, totalSteps);
 
-      // Terrain DEM
+ 
       if (!mapRef.current.getSource("mapbox-dem")) {
         mapRef.current.addSource("mapbox-dem", {
           type: "raster-dem",
@@ -112,7 +108,6 @@ const WeatherStationsMap = () => {
         mapRef.current.setTerrain({ source: "mapbox-dem", exaggeration: 1.0 });
       }
 
-      // Cursor elevation
       mapRef.current.on("mousemove", (e) => {
         const { lng, lat } = e.lngLat;
         const elevation = mapRef.current.queryTerrainElevation(e.lngLat, {
@@ -145,7 +140,6 @@ const WeatherStationsMap = () => {
     };
   }, []);
 
-  // Toggle lakes visibility
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -164,7 +158,6 @@ const WeatherStationsMap = () => {
     });
   }, [showLakes]);
 
-  // Always mount glaciers + lakes
   useGlacierLayer({ mapRef });
   useLakeLayer({ mapRef, show: showLakes, visibility: "none" });
   useLandslideLayer({ mapRef });
@@ -182,13 +175,10 @@ const WeatherStationsMap = () => {
       />
 
       <PitchControl mapRef={mapRef} value={pitch} onChange={(p) => setPitch(p)} />
-      <SearchBar mapRef={mapRef} />
       <Loc cursorInfo={cursorInfo} className="loc-readout" />
       <Hotkey resetZoom={resetZoom} />
-      <MapLegend />
       <BetaPopup loading={loading} progress={progress} title="Loading Data..." />
 
-      <LayersToggle showLakes={showLakes} setShowLakes={setShowLakes} />
     </div>
   );
 };

@@ -3,9 +3,9 @@ import mapboxgl from "mapbox-gl";
 import "./glaciers.css";
 
 export const glacierTileset = {
-  url: "mapbox://mapfean.bmdn0gwv",
-  sourceLayer: "scandi_glaciers2",
-  sourceId: "glaciers_scandi",
+  url: "mapbox://mapfean2.cdkif7n7",
+  sourceLayer: "OGI_lines",
+  sourceId: "OGI_lines",
 };
 
 export const glacierTileset2 = {
@@ -26,10 +26,10 @@ const getGlacierLabel = (props = {}) => {
   if (props?.GLAC_NAME && props.GLAC_NAME.trim() !== "") {
     return props.GLAC_NAME.trim();
   }
-  if (props?.glims_id && props.glims_id.trim() !== "") {
-    return `GLIMS ${props.glims_id.trim()}`;
+  if (props?.Name && props.Name.trim() !== "") {
+    return ` ${props.Name.trim()}`;
   }
-  return "Ukjent";
+  return "Name not found";
 };
 
 export function useGlacierLayer({ mapRef }) {
@@ -77,7 +77,7 @@ export function useGlacierLayer({ mapRef }) {
             "fill-color": "#004d80",
             "fill-opacity": 0.7,
           },
-          filter: ["==", "glims_id", ""],
+          filter: ["==", "Name", ""],
         });
 
         map.addLayer({
@@ -89,7 +89,7 @@ export function useGlacierLayer({ mapRef }) {
             "fill-color": "#004d80",
             "fill-opacity": 0.7,
           },
-          filter: ["==", "glims_id", ""],
+          filter: ["==", "Name", ""],
         });
       }
 
@@ -107,8 +107,8 @@ export function useGlacierLayer({ mapRef }) {
           });
 
           if (!features.length) {
-            map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "glims_id", ""]);
-            map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "glims_id", ""]);
+            map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "Name", ""]);
+            map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "Name", ""]);
             hoverPopup.remove();
             return;
           }
@@ -116,9 +116,9 @@ export function useGlacierLayer({ mapRef }) {
           const feature = features[0];
           const props = feature.properties;
 
-          if (props?.glims_id) {
-            map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "glims_id", props.glims_id]);
-            map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "glims_id", props.glims_id]);
+          if (props?.Name) {
+            map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "Name", props.Name]);
+            map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "Name", props.Name]);
           }
 
           const glacLabel = getGlacierLabel(props);
@@ -150,16 +150,15 @@ export function useGlacierLayer({ mapRef }) {
         });
 
         map.on("mouseleave", FILL_LAYER_ID_1, () => {
-          map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "glims_id", ""]);
+          map.setFilter(HIGHLIGHT_LAYER_ID, ["==", "Name", ""]);
           hoverPopup.remove();
         });
         map.on("mouseleave", FILL_LAYER_ID_2, () => {
-          map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "glims_id", ""]);
+          map.setFilter(HIGHLIGHT_LAYER_ID_2, ["==", "Name", ""]);
           hoverPopup.remove();
         });
       }
 
-      // 🔹 Handle click popups (simplified – no station info)
       map.on("click", [FILL_LAYER_ID_1, FILL_LAYER_ID_2], async (e) => {
         const features = map.queryRenderedFeatures(e.point, {
           layers: [FILL_LAYER_ID_1, FILL_LAYER_ID_2],
@@ -182,7 +181,6 @@ export function useGlacierLayer({ mapRef }) {
             ? `${parseInt(props.zmax_m, 10)} m`
             : "N/A";
 
-        // Remove existing click popup if open
         if (clickPopup) {
           clickPopup.remove();
           clickPopup = null;
