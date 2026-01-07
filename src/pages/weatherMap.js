@@ -7,11 +7,9 @@ import Loc from "./loc";
 import "./weatherMap.css";
 import PitchControl from "./PitchControl";
 import SearchBar from "./search";
-import { useLakeLayer } from "./lakes";
 import Hotkey from "./Hotkey";
 import MapLegend from "./MapLegend";
 import BetaPopup from "./popup";
-import { useLandslideLayer } from "./landslide";
 
 // cd /Users/seanfagan/Desktop/OGI
 
@@ -22,19 +20,16 @@ const WeatherStationsMap = () => {
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
 
-  const DEFAULT_PITCH = 20;
+  const DEFAULT_PITCH = 50;
   const [pitch, setPitch] = useState(DEFAULT_PITCH);
   const [loading, setLoading] = useState(true);
   const [, setLogMessages] = useState([]);
   const [progress, setProgress] = useState(0);
-  const [showLakes, setShowLakes] = useState(false);
   const [cursorInfo, setCursorInfo] = useState({
     lat: null,
     lng: null,
     elevM: null,
   });
-
-  
 
   const updateProgress = (msg, step, totalSteps) => {
     console.log(msg);
@@ -46,8 +41,8 @@ const WeatherStationsMap = () => {
     const map = mapRef.current;
     if (!map) return;
     map.flyTo({
-      center: [-121.76721, 44.65492],
-        zoom: 9.5,
+      center: [-121.69604, 45.36500],
+      zoom: 14,
       speed: 2.2,
       pitch: DEFAULT_PITCH,
     });
@@ -89,8 +84,8 @@ const WeatherStationsMap = () => {
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/satellite-streets-v12",
-        center: [-121.76721, 44.65492],
-        zoom: 5.5,
+        center: [-121.69604, 45.36500],
+        zoom: 14,
         pitch: DEFAULT_PITCH,
       });
 
@@ -140,27 +135,7 @@ const WeatherStationsMap = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    if (map.getLayer("lake-outline")) {
-      map.setLayoutProperty(
-        "lake-outline",
-        "visibility",
-        showLakes ? "visible" : "none"
-      );
-    }
-
-    const lakeMarkers = document.querySelectorAll(".marker, .place-marker");
-    lakeMarkers.forEach((el) => {
-      el.style.display = showLakes ? "block" : "none";
-    });
-  }, [showLakes]);
-
   useGlacierLayer({ mapRef });
-  useLakeLayer({ mapRef, show: showLakes, visibility: "none" });
-  useLandslideLayer({ mapRef });
 
   return (
     <div style={{ position: "relative" }}>

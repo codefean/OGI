@@ -13,7 +13,7 @@ const BetaPopup = ({ loading, progress, title }) => {
   }, [loading]);
 
   const handleClose = () => {
-    if (loading) return; // block until finished
+    if (loading) return; 
     setVisible(false);
   };
 
@@ -27,18 +27,17 @@ const BetaPopup = ({ loading, progress, title }) => {
       aria-labelledby="scandi-popup-title"
     >
       <div className="scandi-popup-box">
-        <h2 id="scandi-popup-title">Norsk Landslide Forecast</h2>
+        <h2 id="scandi-popup-title">Oregon Glacier Map</h2>
         <p className="popup-text">
-          En interaktiv plattform som formidler informasjon om steinskred- og jordskredrisiko i Norge.
-          Dette nettstedet er for øyeblikket i <strong>beta</strong> og viser kun data fra Møre og Romsdal-regionen. 
-          Det fungerer som et konsept for å gjøre skredrisikodata mer tilgjengelige og interaktive.
+          Currently, the Oregon and Federal government do not track glacial retreat aross Oregon. This map has been developed by
+          the Oregon Glacier Institute to show the state of Oregon glaciers as of X date. This is the <strong>beta</strong> version - this tool is still
+          under development. 
         </p>
 
         <p className="popup-text small">
-          Laget av <strong>Sean Fagan</strong>, som et porteføljeprosjekt for PhD-søknader. 
-          Nettstedet er fortsatt under utvikling og forbedres fortløpende. Dataene er hentet fra NVE.
+          Oregon Glacier Institute is a 501(c)(3) nonprofit. Data sources include X, Y, Z and others. For more information, visit <a href="https://www.orglaciersinst.org/" target="_blank" rel="noopener noreferrer" style={{ color: "white" }}>www.orglaciersinst.org</a>
         </p>
-        {/* Loading area */}
+
         {loading ? (
           <>
             <h3 className="loading-title">{title}</h3>

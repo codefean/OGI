@@ -14,9 +14,9 @@ export const glacierTileset2 = {
   sourceId: "glaciers_svalbard",
 };
 
-export const FILL_LAYER_ID_1 = "glacier-fill-scandi";
+export const FILL_LAYER_ID_1 = "glacier-fill-oregon";
 export const FILL_LAYER_ID_2 = "glacier-fill-svalbard";
-const HIGHLIGHT_LAYER_ID = "glacier-hover-highlight-scandi";
+const HIGHLIGHT_LAYER_ID = "glacier-hover-highlight-oregon";
 const HIGHLIGHT_LAYER_ID_2 = "glacier-hover-highlight-svalbard";
 
 const getGlacierLabel = (props = {}) => {
@@ -65,7 +65,6 @@ export function useGlacierLayer({ mapRef }) {
       addTileset({ ...glacierTileset2, fillId: FILL_LAYER_ID_2 });
 
       map.setLayoutProperty(FILL_LAYER_ID_1, "visibility", "visible");
-      map.setLayoutProperty(FILL_LAYER_ID_2, "visibility", "visible");
 
       if (!map.getLayer(HIGHLIGHT_LAYER_ID)) {
         map.addLayer({
@@ -80,17 +79,7 @@ export function useGlacierLayer({ mapRef }) {
           filter: ["==", "Name", ""],
         });
 
-        map.addLayer({
-          id: HIGHLIGHT_LAYER_ID_2,
-          type: "fill",
-          source: glacierTileset2.sourceId,
-          "source-layer": glacierTileset2.sourceLayer,
-          paint: {
-            "fill-color": "#004d80",
-            "fill-opacity": 0.7,
-          },
-          filter: ["==", "Name", ""],
-        });
+
       }
 
       if (!isTouchDevice) {
@@ -196,7 +185,7 @@ export function useGlacierLayer({ mapRef }) {
           .setLngLat(e.lngLat)
           .setHTML(`
             <div class="glacier-label">
-              <h4>${glacLabel !== "Ukjent" ? glacLabel : "Ukjent isbre"}</h4>
+              <h4>${glacLabel !== "Name" ? glacLabel : "No Name"}</h4>
               <div class="stats">
                 <div><strong>${area}</strong> km²</div>
                 <div><strong>${slope}°</strong> slope</div>
