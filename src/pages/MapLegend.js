@@ -1,11 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./MapLegend.css";
 
-const MapLegend = () => {
+const MOUNTAINS = [
+  { id: "hood", name: "Mt. Hood", center: [-121.69604, 45.37316], zoom: 12.5 },
+  { id: "jefferson", name: "Mt Jefferson", center: [-121.80058, 44.67922], zoom: 12.3 },
+  { id: "middle_sister", name: "Middle Sister", center: [-121.78424, 44.14838], zoom: 12.7 },
+  { id: "south_sister", name: "South Sister", center: [-121.77073, 44.10229], zoom: 12.7 },
+  { id: "broken_top", name: "Broken Top", center: [-121.69963, 44.08338], zoom: 12.7 },
+];
+
+const MapLegend = ({ selectedId = "hood", onSelect }) => {
   const [expanded, setExpanded] = useState(false);
   const legendRef = useRef(null);
 
-  // Collapse when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (legendRef.current && !legendRef.current.contains(event.target)) {
@@ -16,81 +23,53 @@ const MapLegend = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const selected =
+    MOUNTAINS.find((m) => m.id === selectedId) ?? MOUNTAINS[0];
+
   return (
     <div
-      className={`map-legend ${expanded ? "expanded" : ""}`}
+      className={`map-legend mountain-menu ${expanded ? "expanded" : ""}`}
       ref={legendRef}
-      onClick={() => setExpanded(!expanded)}
+      role="menu"
     >
-
-
-{/* Isbre */}
-<div className="map-legend-item glacier-item">
-  <div className="map-legend-circle glacier" />
-  <div className="map-legend-label">
-    <strong>Isbre</strong>
-    {expanded && (
-      <div className="legend-description">
-        Ismasse som beveger seg nedover i terrenget og forsyner brevatn og innsjøer.
-      </div>
-    )}
-  </div>
+      {!expanded && (
+        <button
+          type="button"
+          className="mountain-menu-trigger"
+          onClick={() => setExpanded(true)}
+          aria-haspopup="true"
+        >
+          <div className="map-legend-item" style={{ width: "100%" }}>
+<div className="mountain-menu-item">
+  <strong>{selected.name}</strong>
 </div>
+          </div>
+        </button>
+      )}
 
-
-<div className="map-legend-item">
-  <div className="historical-event-dot" />
-  <div className="map-legend-label">
-    <strong>Historiske hendelser</strong>
-    {expanded && (
-      <div className="legend-description">
-        Registrerte skredhendelser som steinsprang, jordskred og flomskred fra NVE Skredhendelser-databasen.
-      </div>
-    )}
-  </div>
-</div>
-
-<div className="map-legend-item">
-  <div className="map-legend-square hazard-100" />
-  <div className="map-legend-label">
-    <strong>Høy risikosone</strong>
-    {expanded && (
-      <div className="legend-description">
-        Område med høy fare (100-årssone, årlig sannsynlighet ≈ 1 %). Hyppige skredhendelser – unngå ny bebyggelse og kritisk infrastruktur.
-      </div>
-    )}
-  </div>
-</div>
-
-<div className="map-legend-item">
-  <div className="map-legend-square hazard-1000" />
-  <div className="map-legend-label">
-    <strong>Moderat risikosone</strong>
-    {expanded && (
-      <div className="legend-description">
-        Område med moderat fare (1000-årssone, årlig sannsynlighet ≈ 0,1 %). Av og til forekommende skred – vurdering kreves ved varige bygg og infrastruktur.
-      </div>
-    )}
-  </div>
-</div>
-
-<div className="map-legend-item">
-  <div className="map-legend-square hazard-5000" />
-  <div className="map-legend-label">
-    <strong>Lav risikosone</strong>
-    {expanded && (
-      <div className="legend-description">
-        Område med lav fare (5000-årssone, årlig sannsynlighet ≈ 0,02 %). Svært sjeldne og ekstreme hendelser – egnet for vanlig utbygging med overvåking.
-      </div>
-
-
-
-          )}
-
-          
+      {expanded && (
+        <div className="mountain-menu-list" role="menu">
+          {MOUNTAINS.map((m) => {
+            const active = m.id === selectedId;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                role="menuitem"
+                className={`mountain-menu-item ${active ? "active" : ""}`}
+                onClick={() => {
+                  onSelect?.(m);
+                  setExpanded(false);
+                }}
+              >
+                <div className="map-legend-label menu-option-label">
+                  <strong>{m.name}</strong>
+                </div>
+              </button>
+            );
+          })}
         </div>
-        
-      </div>
+      )}
     </div>
   );
 };

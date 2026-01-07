@@ -22,6 +22,7 @@ const WeatherStationsMap = () => {
 
   const DEFAULT_PITCH = 50;
   const [pitch, setPitch] = useState(DEFAULT_PITCH);
+  const [selectedMountain, setSelectedMountain] = useState("hood");
   const [loading, setLoading] = useState(true);
   const [, setLogMessages] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -153,6 +154,16 @@ const WeatherStationsMap = () => {
       <Loc cursorInfo={cursorInfo} className="loc-readout" />
       <Hotkey resetZoom={resetZoom} />
       <BetaPopup loading={loading} progress={progress} title="Loading Data..." />
+      <MapLegend
+  selectedId={selectedMountain}
+  onSelect={(m) => {
+    setSelectedMountain(m.id);
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo({ center: m.center, zoom: m.zoom ?? 12.5, pitch: DEFAULT_PITCH, speed: 1.8 });
+    setPitch(DEFAULT_PITCH);
+  }}
+/>
 
     </div>
   );
