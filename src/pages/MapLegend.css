@@ -1,6 +1,4 @@
-/* ===========================
-   MAP LEGEND CONTAINER
-=========================== */
+
 .map-legend {
   position: fixed;
   bottom: 20px;
@@ -39,9 +37,7 @@
   flex-wrap: wrap;
 }
 
-/* ===========================
-   LEGEND ITEM & LABELS
-=========================== */
+
 .map-legend-item {
   display: flex;
   align-items: flex-start;
@@ -68,7 +64,7 @@
   margin-top: 2px;
 }
 
-/* Expanded/collapsed label behavior */
+
 .map-legend:not(.expanded) .map-legend-label {
   white-space: nowrap;
   overflow: hidden;
@@ -76,10 +72,6 @@
 }
 
 
-
-/* ===========================
-   RESPONSIVE ADJUSTMENTS
-=========================== */
 @media (max-width: 677px) {
   .map-legend {
     left: 10px;

@@ -14,7 +14,7 @@ const useDocumentTitle = (title) => {
 };
 
 const WeatherMapPage = () => {
-  useDocumentTitle("Norsk Landslide Forecast");
+  useDocumentTitle("Oregon Glaciers Institute");
   return <WeatherMap />;
 };
 
