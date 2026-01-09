@@ -1,8 +1,8 @@
 {
-  "name": "norsklandslide",
+  "name": "Oregon Glaciers Institute",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://www.norsklandslide.org",
+  "homepage": "https://codefean.github.io/OGI/",
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
