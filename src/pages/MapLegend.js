@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import "./MapLegend.css";
 
 const MOUNTAINS = [
-  { id: "hood", name: "Mt. Hood", center: [-121.69604, 45.37316], zoom: 12.5 },
-  { id: "jefferson", name: "Mt Jefferson", center: [-121.80058, 44.67922], zoom: 12.3 },
-  { id: "middle_sister", name: "Middle Sister", center: [-121.78424, 44.14838], zoom: 12.7 },
-  { id: "south_sister", name: "South Sister", center: [-121.77073, 44.10229], zoom: 12.7 },
-  { id: "broken_top", name: "Broken Top", center: [-121.69963, 44.08338], zoom: 12.7 },
+  { id: "hood", name: "Mt. Hood", center: [-121.69604, 45.36500], zoom: 14 },
+  { id: "jefferson", name: "Mt Jefferson", center: [-121.80058, 44.66822], zoom: 14 },
+  { id: "middle_sister", name: "Middle Sister", center: [-121.78424, 44.14338], zoom: 14 },
+  { id: "south_sister", name: "South Sister", center: [-121.77073, 44.10000], zoom: 14 },
+  { id: "broken_top", name: "Broken Top", center: [-121.69963, 44.08338], zoom: 14 },
 ];
 
 const MapLegend = ({ selectedId = "hood", onSelect }) => {

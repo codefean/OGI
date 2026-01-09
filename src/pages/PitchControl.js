@@ -2,11 +2,36 @@ import React, { forwardRef } from "react";
 import "./PitchControl.css";
 
 const PitchControl = forwardRef(
-  ({ mapRef, value, onChange, min = 10, max = 70, step = 1 }, ref) => {
+  (
+    {
+      mapRef,
+
+      // existing pitch API (keep as-is)
+      value,
+      onChange,
+      min = 10,
+      max = 70,
+      step = 1,
+
+      // new bearing API
+      bearing = 0,
+      onBearingChange,
+      bearingMin = -180,
+      bearingMax = 180,
+      bearingStep = 1,
+    },
+    ref
+  ) => {
     const handlePitchChange = (e) => {
       const newPitch = parseInt(e.target.value, 10);
       if (mapRef.current) mapRef.current.setPitch(newPitch);
-      if (onChange) onChange(newPitch); // tell parent to update its pitch state
+      onChange?.(newPitch);
+    };
+
+    const handleBearingChange = (e) => {
+      const newBearing = parseInt(e.target.value, 10);
+      if (mapRef.current) mapRef.current.setBearing(newBearing);
+      onBearingChange?.(newBearing);
     };
 
     return (
@@ -18,8 +43,19 @@ const PitchControl = forwardRef(
           min={min}
           max={max}
           step={step}
-          value={Math.round(Number(value) || 0)} // CONTROLLED value
+          value={Math.round(Number(value) || 0)}
           onChange={handlePitchChange}
+        />
+
+        <label htmlFor="bearing-slider">Rotate</label>
+        <input
+          id="bearing-slider"
+          type="range"
+          min={bearingMin}
+          max={bearingMax}
+          step={bearingStep}
+          value={Math.round(Number(bearing) || 0)}
+          onChange={handleBearingChange}
         />
       </div>
     );

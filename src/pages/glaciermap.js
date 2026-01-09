@@ -21,7 +21,9 @@ const GlacierMap = () => {
   const mapRef = useRef(null);
 
   const DEFAULT_PITCH = 50;
+  const DEFAULT_BEARING = 0;
   const [pitch, setPitch] = useState(DEFAULT_PITCH);
+  const [bearing, setBearing] = useState(DEFAULT_BEARING);
   const [selectedMountain, setSelectedMountain] = useState("hood");
   const [loading, setLoading] = useState(true);
   const [, setLogMessages] = useState([]);
@@ -150,7 +152,13 @@ const GlacierMap = () => {
         }}
       />
 
-      <PitchControl mapRef={mapRef} value={pitch} onChange={(p) => setPitch(p)} />
+      <PitchControl
+  mapRef={mapRef}
+  value={pitch}
+  onChange={setPitch}
+  bearing={bearing}
+  onBearingChange={setBearing}
+/>;
       <Loc cursorInfo={cursorInfo} className="loc-readout" />
       <Hotkey resetZoom={resetZoom} />
       <BetaPopup loading={loading} progress={progress} title="Loading Data..." />
