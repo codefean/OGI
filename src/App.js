@@ -31,8 +31,8 @@ const App = () => {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<WeatherMapPage />} />
-            <Route path="/glacier-lines" element={<WeatherMapPage />} />
-            <Route path="/glacier-lines" element={<WeatherMapPage />} />
+            <Route path="/glaciers" element={<WeatherMapPage />} />
+            <Route path="/glaciers" element={<WeatherMapPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<WeatherMapPage />} />
           </Routes>
