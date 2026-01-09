@@ -14,7 +14,7 @@ import BetaPopup from "./popup";
 // cd /Users/seanfagan/Desktop/OGI
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoibWFwZmVhbjIiLCJhIjoiY21rMWtiN2RhMDdhbjNxczcxc3N0d3ozbCJ9.YKzuzjqomFbaFuPf847OZg";
+  "pk.eyJ1IjoibWFwZmVhbjIiLCJhIjoiY21rNnlzdGUyMHZrODNjc2M2MHhnZnIwbCJ9.VgQlIRtxkpy8kakPJChaDw";
 
 const WeatherStationsMap = () => {
   const mapContainer = useRef(null);
