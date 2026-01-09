@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import WeatherMap from "./pages/weatherMap";
+import GlacierMap from "./pages/glaciermap";
 import About from "./pages/About";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -13,9 +13,9 @@ const useDocumentTitle = (title) => {
   }, [title]);
 };
 
-const WeatherMapPage = () => {
+const GlacierMapPage = () => {
   useDocumentTitle("Oregon Glaciers Institute");
-  return <WeatherMap />;
+  return <GlacierMap />;
 };
 
 const AboutPage = () => {
@@ -30,11 +30,10 @@ const App = () => {
         <Header />
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<WeatherMapPage />} />
-            <Route path="/glaciers" element={<WeatherMapPage />} />
-            <Route path="/glaciers" element={<WeatherMapPage />} />
+            <Route path="/" element={<GlacierMapPage />} />
+            <Route path="/glaciers" element={<GlacierMapPage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="*" element={<WeatherMapPage />} />
+            <Route path="*" element={<GlacierMapPage />} />
           </Routes>
         </main>
         <Footer />
