@@ -112,3 +112,8 @@
 
 }
 
+@media (max-width: 768px) {
+  .bearing-control {
+    display: none;
+  }
+}

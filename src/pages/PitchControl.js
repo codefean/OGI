@@ -47,16 +47,18 @@ const PitchControl = forwardRef(
           onChange={handlePitchChange}
         />
 
-        <label htmlFor="bearing-slider">Rotate</label>
-        <input
-          id="bearing-slider"
-          type="range"
-          min={bearingMin}
-          max={bearingMax}
-          step={bearingStep}
-          value={Math.round(Number(bearing) || 0)}
-          onChange={handleBearingChange}
-        />
+  <div className="bearing-control">
+    <label htmlFor="bearing-slider">Rotate</label>
+    <input
+      id="bearing-slider"
+      type="range"
+      min={bearingMin}
+      max={bearingMax}
+      step={bearingStep}
+      value={Math.round(Number(bearing) || 0)}
+      onChange={handleBearingChange}
+    />
+  </div>
       </div>
     );
   }
