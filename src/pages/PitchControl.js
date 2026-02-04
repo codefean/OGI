@@ -6,14 +6,12 @@ const PitchControl = forwardRef(
     {
       mapRef,
 
-      // existing pitch API (keep as-is)
       value,
       onChange,
       min = 10,
       max = 70,
       step = 1,
 
-      // new bearing API
       bearing = 0,
       onBearingChange,
       bearingMin = -180,
@@ -48,7 +46,7 @@ const PitchControl = forwardRef(
         />
 
   <div className="bearing-control">
-    <label htmlFor="bearing-slider">Rotate</label>
+    <label htmlFor="bearing-slider"></label>
     <input
       id="bearing-slider"
       type="range"

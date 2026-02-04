@@ -48,8 +48,10 @@ const GlacierMap = () => {
       zoom: 14,
       speed: 2.2,
       pitch: DEFAULT_PITCH,
+      bearing: DEFAULT_BEARING,
     });
     setPitch(DEFAULT_PITCH);
+    setBearing(DEFAULT_BEARING);
   };
 
 
@@ -168,8 +170,9 @@ const GlacierMap = () => {
     setSelectedMountain(m.id);
     const map = mapRef.current;
     if (!map) return;
-    map.flyTo({ center: m.center, zoom: m.zoom ?? 12.5, pitch: DEFAULT_PITCH, speed: 1.8 });
+    map.flyTo({ center: m.center, zoom: m.zoom ?? 12.5, pitch: DEFAULT_PITCH, bearing: DEFAULT_BEARING, speed: 1.8 });
     setPitch(DEFAULT_PITCH);
+    setBearing(DEFAULT_BEARING);
   }}
 />
 
