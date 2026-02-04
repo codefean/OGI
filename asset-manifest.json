@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/OGI/static/css/main.a9ee971b.css",
-    "main.js": "/OGI/static/js/main.efd628b0.js",
+    "main.js": "/OGI/static/js/main.87c443c6.js",
     "index.html": "/OGI/index.html",
     "main.a9ee971b.css.map": "/OGI/static/css/main.a9ee971b.css.map",
-    "main.efd628b0.js.map": "/OGI/static/js/main.efd628b0.js.map"
+    "main.87c443c6.js.map": "/OGI/static/js/main.87c443c6.js.map"
   },
   "entrypoints": [
     "static/css/main.a9ee971b.css",
-    "static/js/main.efd628b0.js"
+    "static/js/main.87c443c6.js"
   ]
 }
