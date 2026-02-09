@@ -1,0 +1,28 @@
+import React from 'react';
+import './Reset.css';
+
+const ResetButton = ({
+  onReset,
+  isMobile,
+  pitchBottom,
+}) => {
+  return (
+    <button
+      onClick={onReset}
+      aria-label="Reset View (R)"
+      title="Reset View (R)"
+      className="reset-button"
+      style={{
+        position: 'absolute',
+        bottom: isMobile ? `${pitchBottom / .55}px` : '124px',
+        left: isMobile ? 'auto' : '6px',
+        right: isMobile ? '12px' : 'auto',
+        minWidth: isMobile ? 'auto' : '187px',
+      }}
+    >
+      {isMobile ? 'R' : 'Reset View (R)'}
+    </button>
+  );
+};
+
+export default ResetButton;

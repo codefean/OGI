@@ -1,50 +1,58 @@
-// src/pages/loc.js
-import React from "react";
-import './loc.css';
+import { useEffect, useState } from "react";
+import "./loc.css";
 
-const Loc = ({ cursorInfo }) => {
-  // Don't render if on small screen
-  if (typeof window !== "undefined" && window.innerWidth <= 768) {
-    return null;
-  }
-
-  return (
-    <div
-      className="cursor-readout"
-      style={{
-        position: "absolute",
-        left: 12,
-        bottom: 35,
-        padding: "8px 10px",
-        background: "rgba(0,0,0,0.55)",
-        color: "#fff",
-        borderRadius: 8,
-        fontSize: 12,
-        lineHeight: 1.2,
-        pointerEvents: "none",
-        zIndex: 2,
-      }}
-    >
-      {cursorInfo.lat !== null && cursorInfo.lng !== null ? (
-        <>
-          <div>
-            <strong>Lat:</strong> {cursorInfo.lat.toFixed(5)} &nbsp;
-            <strong>Lng:</strong> {cursorInfo.lng.toFixed(5)}
-          </div>
-          <div>
-            <strong>Elev:</strong>{" "}
-            {cursorInfo.elevM === null
-              ? "—"
-              : `${Math.round(cursorInfo.elevM)} m (${Math.round(
-                  cursorInfo.elevM * 3.28084
-                )} ft)`}
-          </div>
-        </>
-      ) : (
-        <div></div>
-      )}
-    </div>
+/**
+ * @param {Object} mapRef
+ * @param {Function} setCursorInfo
+ */
+export function useCursorLocation(mapRef, setCursorInfo) {
+  const [isMobile, setIsMobile] = useState(
+    window.matchMedia("(max-width: 768px)").matches
   );
-};
 
-export default Loc;
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 768px)");
+    const listener = () => setIsMobile(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (isMobile) {
+      setCursorInfo({ lng: null, lat: null, elevM: null });
+      return;
+    }
+
+    let rafId = null;
+
+    const onMove = (e) => {
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const { lng, lat } = e.lngLat;
+        let elevM = null;
+
+        try {
+          elevM = map.queryTerrainElevation(e.lngLat, { exaggerated: false });
+        } catch {}
+
+        if (typeof elevM !== "number" || Number.isNaN(elevM)) {
+          elevM = null;
+        }
+
+        setCursorInfo({ lng, lat, elevM });
+      });
+    };
+
+    map.on("mousemove", onMove);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      map.off("mousemove", onMove);
+    };
+  }, [mapRef, setCursorInfo, isMobile]);
+}
