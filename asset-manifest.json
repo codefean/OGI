@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/OGI/static/css/main.a9ee971b.css",
-    "main.js": "/OGI/static/js/main.87c443c6.js",
+    "main.css": "/OGI/static/css/main.562126bf.css",
+    "main.js": "/OGI/static/js/main.90f29263.js",
     "index.html": "/OGI/index.html",
-    "main.a9ee971b.css.map": "/OGI/static/css/main.a9ee971b.css.map",
-    "main.87c443c6.js.map": "/OGI/static/js/main.87c443c6.js.map"
+    "main.562126bf.css.map": "/OGI/static/css/main.562126bf.css.map",
+    "main.90f29263.js.map": "/OGI/static/js/main.90f29263.js.map"
   },
   "entrypoints": [
-    "static/css/main.a9ee971b.css",
-    "static/js/main.87c443c6.js"
+    "static/css/main.562126bf.css",
+    "static/js/main.90f29263.js"
   ]
 }
