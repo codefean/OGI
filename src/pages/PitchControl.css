@@ -1,6 +1,6 @@
 .pitch-control {
   position: absolute;
-  bottom: 58px;
+  bottom: 30px;
   left: 6px;
   padding: 8px 10px;
   background: rgba(0, 0, 0, 0.55);
@@ -39,7 +39,7 @@
   cursor: pointer;
 }
 
-/* Chrome & Safari slider thumb */
+
 .pitch-control input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -54,7 +54,7 @@
   background: #2f7bd9d0;
 }
 
-/* Firefox slider thumb */
+
 .pitch-control input[type="range"]::-moz-range-thumb {
   width: 17px;
   height: 17px;

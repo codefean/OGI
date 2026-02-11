@@ -9,16 +9,14 @@ const Header = () => {
 
   return (
     <header className="header">
-      {/* Mobile hamburger */}
-      <button
-        className="menu-toggle"
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? "✖" : "☰"}
-      </button>
+<button
+  className={`menu-toggle ${isMenuOpen ? "open-x" : ""}`}
+  aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+  onClick={() => setIsMenuOpen(!isMenuOpen)}
+>
+  {isMenuOpen ? "x" : "☰"}
+</button>
 
-      {/* Nav links */}
       <nav className={`nav-links ${isMenuOpen ? "open" : ""}`}>
         <NavLink
           to="/weatherMap"
@@ -40,7 +38,6 @@ const Header = () => {
         </NavLink>
       </nav>
 
-      {/* Title centered */}
 <div className="header-title">
   <h1>
     Oregon Glacier Institute <span className="beta-text">| Beta</span>

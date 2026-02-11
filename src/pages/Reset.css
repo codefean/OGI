@@ -10,10 +10,18 @@
   font-weight: bold;
   text-align: center;
   transition: background-color 0.2s ease;
+  margin-bottom: -28px;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .reset-button:hover {
     background: #097cf09a;
+  }
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .reset-button {
+    display: none;
   }
 }

@@ -17,6 +17,7 @@ const GlacierMap = () => {
 
   const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 768px)").matches);
   const [pitch, setPitch] = useState(isMobile ? 40 : 50);
+  const [pitchBottom, setPitchBottom] = useState(100);
   const [bearing, setBearing] = useState(0);
   const [selectedMountain, setSelectedMountain] = useState("hood");
   const [activeDataset, setActiveDataset] = useState("Oregon_25");
@@ -165,7 +166,11 @@ const GlacierMap = () => {
       )}
 
       <ResetButton onReset={resetZoom} />
-      <ZoomControls mapRef={mapRef} />
+      <ZoomControls
+  mapRef={mapRef}
+  isMobile={isMobile}
+  pitchBottom={pitchBottom}
+/>
 
       <BetaPopup loading={loading} progress={progress} title="Loading Data..." />
 

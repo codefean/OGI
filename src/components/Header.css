@@ -2,16 +2,15 @@
 .header {
   background-color: #000000;
   color: white;
-  padding: 6px 15px;
+  padding: 8px 15px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* nav links on the left */
+  justify-content: flex-start; 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   position: relative;
   z-index: 5;
 }
 
-/* Title centered absolutely */
 .header-title {
   position: absolute;
   left: 50%;
@@ -21,17 +20,15 @@
 
 .header-title h1 {
   font-size: clamp(1rem, 5vw, 1.9rem);
-  margin: 0;
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Nav links (desktop view) */
 .nav-links {
   display: flex;
-  gap: 24px;
+  gap: 12px !important;
   list-style: none;
 }
 
@@ -42,7 +39,7 @@
   font-size: 1.1em;
   transition: color 0.3s ease, border-bottom 0.3s ease;
   border-bottom: 2px solid transparent;
-  padding: 4px 0;
+  padding: 1px 0;
 }
 
 .nav-links a:hover {
@@ -55,22 +52,24 @@
   border-bottom: 2px solid #1663c1;
 }
 
-/* Hamburger toggle (hidden by default) */
 .menu-toggle {
   display: none;
-  font-size: 1.6em;
+  font-size: 1rem;
   cursor: pointer;
   color: white;
   background: none;
   border: none;
-  z-index: 11; /* stays above nav menu */
+  z-index: 11;
 }
 
 .menu-toggle:hover {
   color: #4496fa;
 }
 
-/* Mobile styles */
+.menu-toggle.open-x {
+  font-size: 1rem;
+}
+
 @media (max-width: 1057px) {
   .menu-toggle {
     display: block;
@@ -95,7 +94,7 @@
   }
 
   .nav-links.open {
-    max-height: 200px; /* adjust for more links */
+    max-height: 200px; 
   }
 
   .nav-links a {
@@ -104,10 +103,26 @@
     width: 100%;
     text-align: center;
   }
+
+  .nav-links {
+  display: flex;
+  gap: 0px !important;
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 1em;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+  border-bottom: 2px solid transparent;
+  padding: 1px 0;
+}
 }
 
 .beta-text {
   font-weight: normal;
   font-size: clamp(1rem, 5vw, 1.9rem);
-  opacity: 0.8;       /* optional: soften the color */
+  opacity: 0.8; 
 }
