@@ -42,17 +42,17 @@ const GlacierMap = () => {
     setProgress(Math.round((step / totalSteps) * 100));
   };
 
-const flyToDefault = useCallback((center, zoom = DEFAULT_ZOOM, speed = 1.8) => {
-  const map = mapRef.current;
-  if (!map) return;
-  map.flyTo({ center, zoom, pitch: DEFAULT_PITCH, bearing: DEFAULT_BEARING, speed });
-  setPitch(DEFAULT_PITCH);
-  setBearing(DEFAULT_BEARING);
-}, [DEFAULT_PITCH, DEFAULT_BEARING, DEFAULT_ZOOM]);
+  const flyToDefault = useCallback((center, zoom = DEFAULT_ZOOM, speed = 1.8) => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo({ center, zoom, pitch: DEFAULT_PITCH, bearing: DEFAULT_BEARING, speed });
+    setPitch(DEFAULT_PITCH);
+    setBearing(DEFAULT_BEARING);
+  }, [DEFAULT_PITCH, DEFAULT_BEARING, DEFAULT_ZOOM]);
 
-const resetZoom = useCallback(() => {
-  flyToDefault([-121.69604, 45.365], DEFAULT_ZOOM, 2.2);
-}, [flyToDefault, DEFAULT_ZOOM]);
+  const resetZoom = useCallback(() => {
+    flyToDefault([-121.69604, 45.365], DEFAULT_ZOOM, 2.2);
+  }, [flyToDefault, DEFAULT_ZOOM]);
 
   useEffect(() => {
     const handleKeydown = (e) => {
@@ -116,6 +116,25 @@ const resetZoom = useCallback(() => {
     };
   }, [isMobile, DEFAULT_PITCH, DEFAULT_ZOOM]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    ["Oregon_17", "Oregon_23", "Oregon_25"].forEach((layer) => {
+      if (map.getLayer(layer)) map.setLayoutProperty(layer, "visibility", "none");
+    });
+
+    if (activeDataset === "ALL") {
+      ["Oregon_17", "Oregon_23", "Oregon_25"].forEach((layer) => {
+        if (map.getLayer(layer)) map.setLayoutProperty(layer, "visibility", "visible");
+      });
+    } else {
+      if (map.getLayer(activeDataset)) {
+        map.setLayoutProperty(activeDataset, "visibility", "visible");
+      }
+    }
+  }, [activeDataset, mapRef]);
+
   useGlacierLayer({ mapRef, activeDataset });
 
   return (
@@ -131,6 +150,7 @@ const resetZoom = useCallback(() => {
           <option value="Oregon_25">2025</option>
           <option value="Oregon_23">2023</option>
           <option value="Oregon_17">2017</option>
+          <option value="ALL">ALL</option>
         </select>
       </div>
 

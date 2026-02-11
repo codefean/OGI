@@ -44,28 +44,21 @@ const glacierNameExpr = [
   ["get", "Name"],
 ];
 
-const getPopupHTML = (props) => {
+const getPopupHTML = (props, datasetKey) => {
   const glacLabel = getGlacierLabel(props);
-  const area =
-    props?.area_km2 && !isNaN(props.area_km2)
-      ? parseFloat(props.area_km2).toFixed(2)
-      : "N/A";
-  const slope =
-    props?.slope_deg && !isNaN(props.slope_deg)
-      ? parseFloat(props.slope_deg).toFixed(1)
-      : "N/A";
-  const zmax =
-    props?.zmax_m && !isNaN(props.zmax_m)
-      ? `${parseInt(props.zmax_m, 10)} m`
-      : "N/A";
-
+  const rawArea = props?.area_km2 ?? props?.AREA_KM2 ?? props?.AREA_km2;
+  const area = rawArea !== undefined && !isNaN(rawArea) ? parseFloat(rawArea).toFixed(2) : "N/A";
+  const slope = props?.slope_deg && !isNaN(props.slope_deg) ? parseFloat(props.slope_deg).toFixed(1) : "N/A";
+  const zmax = props?.zmax_m && !isNaN(props.zmax_m) ? `${parseInt(props.zmax_m, 10)} m` : "N/A";
+  const year = datasetKey === "Oregon_25" ? 2025 : datasetKey === "Oregon_23" ? 2023 : datasetKey === "Oregon_17" ? 2017 : "N/A";
+  const ref = datasetKey === "Oregon_25" ? "OGI" : "Fountain";
   return `
     <div class="glacier-label">
       <h4>${glacLabel}</h4>
       <div class="stats">
         <div><strong>${area}</strong> km²</div>
-        <div><strong>${slope}°</strong> slope</div>
-        <div><strong>${zmax}</strong> max elev</div>
+        <div><strong>${year}</strong> year</div>
+        <div><strong>${ref}</strong> data source</div>
       </div>
     </div>
   `;
@@ -76,120 +69,83 @@ export function useGlacierLayer({ mapRef, activeDataset }) {
     const map = mapRef?.current;
     if (!map || !activeDataset) return;
 
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     let clickPopup = null;
-    const isTouchDevice =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    const datasets = activeDataset === "ALL" ? ["Oregon_17", "Oregon_23", "Oregon_25"] : [activeDataset];
 
     const onLoad = () => {
-      Object.values(GLACIER_DATASETS).forEach((ds) => {
-        if (!map.getSource(ds.sourceId)) {
-          map.addSource(ds.sourceId, { type: "vector", url: ds.url });
-        }
-
-        if (!map.getLayer(ds.fillId)) {
+      datasets.forEach((key) => {
+        const ds = GLACIER_DATASETS[key];
+        if (!map.getSource(ds.sourceId)) map.addSource(ds.sourceId, { type: "vector", url: ds.url });
+        if (!map.getLayer(ds.fillId))
           map.addLayer({
             id: ds.fillId,
             type: "fill",
             source: ds.sourceId,
             "source-layer": ds.sourceLayer,
-            paint: {
-              "fill-color": "#2ba0ff",
-              "fill-opacity": 0.4,
-            },
+            paint: { "fill-color": "#2ba0ff", "fill-opacity": 0.4 },
           });
-        }
-
-        if (!map.getLayer(ds.highlightId)) {
+        if (!map.getLayer(ds.highlightId))
           map.addLayer({
             id: ds.highlightId,
             type: "fill",
             source: ds.sourceId,
             "source-layer": ds.sourceLayer,
-            paint: {
-              "fill-color": "#004d80",
-              "fill-opacity": 0.7,
-            },
+            paint: { "fill-color": "#004d80", "fill-opacity": 0.7 },
             filter: ["==", glacierNameExpr, ""],
           });
-        }
       });
 
-      Object.entries(GLACIER_DATASETS).forEach(([key, ds]) => {
-        const visible = key === activeDataset ? "visible" : "none";
+      Object.keys(GLACIER_DATASETS).forEach((key) => {
+        const ds = GLACIER_DATASETS[key];
+        const visible = datasets.includes(key) ? "visible" : "none";
         map.setLayoutProperty(ds.fillId, "visibility", visible);
         map.setLayoutProperty(ds.highlightId, "visibility", visible);
       });
 
-      const active = GLACIER_DATASETS[activeDataset];
-
       if (!isTouchDevice) {
-        const hoverPopup = new mapboxgl.Popup({
-          closeButton: false,
-          closeOnClick: false,
-          offset: 10,
-          className: "glacier-popup",
-        });
+        datasets.forEach((key) => {
+          const ds = GLACIER_DATASETS[key];
+          const hoverPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, offset: 10, className: "glacier-popup" });
 
-        map.on("mousemove", (e) => {
-          const features = map.queryRenderedFeatures(e.point, {
-            layers: [active.fillId],
+          map.on("mousemove", (e) => {
+            const features = map.queryRenderedFeatures(e.point, { layers: [ds.fillId] });
+            if (!features.length) {
+              map.setFilter(ds.highlightId, ["==", glacierNameExpr, ""]);
+              hoverPopup.remove();
+              return;
+            }
+            const feature = features[0];
+            const props = feature.properties;
+            const glacLabel = getGlacierLabel(props);
+            map.setFilter(ds.highlightId, ["==", glacierNameExpr, glacLabel]);
+            hoverPopup.setLngLat(e.lngLat).setHTML(getPopupHTML(props, key)).addTo(map);
           });
 
-          if (!features.length) {
-            map.setFilter(active.highlightId, ["==", glacierNameExpr, ""]);
+          map.on("mouseleave", ds.fillId, () => {
+            map.setFilter(ds.highlightId, ["==", glacierNameExpr, ""]);
             hoverPopup.remove();
-            return;
-          }
-
-          const feature = features[0];
-          const props = feature.properties;
-          const glacLabel = getGlacierLabel(props);
-
-          map.setFilter(active.highlightId, [
-            "==",
-            glacierNameExpr,
-            glacLabel,
-          ]);
-
-          hoverPopup
-            .setLngLat(e.lngLat)
-            .setHTML(getPopupHTML(props))
-            .addTo(map);
-        });
-
-        map.on("mouseleave", active.fillId, () => {
-          map.setFilter(active.highlightId, ["==", glacierNameExpr, ""]);
-          hoverPopup.remove();
+          });
         });
       }
 
-      map.on("click", active.fillId, (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: [active.fillId],
+      datasets.forEach((key) => {
+        const ds = GLACIER_DATASETS[key];
+        map.on("click", ds.fillId, (e) => {
+          const features = map.queryRenderedFeatures(e.point, { layers: [ds.fillId] });
+          if (!features.length) return;
+          const props = features[0].properties;
+          if (clickPopup) clickPopup.remove();
+          clickPopup = new mapboxgl.Popup({ className: "glacier-popup glacier-click-popup", closeButton: true, closeOnClick: false, anchor: "top", offset: [0, -10] })
+            .setLngLat(e.lngLat)
+            .setHTML(getPopupHTML(props, key))
+            .addTo(map);
         });
-        if (!features.length) return;
-
-        const props = features[0].properties;
-
-        if (clickPopup) clickPopup.remove();
-
-        clickPopup = new mapboxgl.Popup({
-          className: "glacier-popup glacier-click-popup",
-          closeButton: true,
-          closeOnClick: false,
-          anchor: "top",
-          offset: [0, -10],
-        })
-          .setLngLat(e.lngLat)
-          .setHTML(getPopupHTML(props))
-          .addTo(map);
       });
 
       map.on("click", (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: [active.fillId],
-        });
-
+        const features = datasets.flatMap((key) => map.queryRenderedFeatures(e.point, { layers: [GLACIER_DATASETS[key].fillId] }));
         if (!features.length && clickPopup) {
           clickPopup.remove();
           clickPopup = null;
@@ -197,14 +153,9 @@ export function useGlacierLayer({ mapRef, activeDataset }) {
       });
     };
 
-    if (map.isStyleLoaded()) {
-      onLoad();
-    } else {
-      map.on("load", onLoad);
-    }
+    if (map.isStyleLoaded()) onLoad();
+    else map.on("load", onLoad);
 
-    return () => {
-      map.off("load", onLoad);
-    };
+    return () => map.off("load", onLoad);
   }, [mapRef, activeDataset]);
 }
