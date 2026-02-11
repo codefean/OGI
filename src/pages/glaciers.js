@@ -2,38 +2,47 @@ import { useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "./glaciers.css";
 
-
 export const GLACIER_DATASETS = {
-  Oregon_23: {
+  Oregon_25: {
     url: "mapbox://mapfean2.cdkif7n7",
     sourceLayer: "OGI_lines",
-    sourceId: "glaciers_23",
+    sourceId: "glaciers_25",
+    fillId: "glacier-fill-25",
+    highlightId: "glacier-highlight-25",
+  },
+  Oregon_17: {
+    url: "mapbox://mapfean2.347l0v4w",
+    sourceLayer: "ogi_2017",
+    sourceId: "ogi_2017",
+    fillId: "ogi_2017",
+    highlightId: "glacier-highlight-17",
+  },
+  Oregon_23: {
+    url: "mapbox://mapfean2.6968qql8",
+    sourceLayer: "ogi_2023",
+    sourceId: "ogi_2023",
     fillId: "glacier-fill-23",
     highlightId: "glacier-highlight-23",
   },
-  Oregon_17: {
-    url: "mapbox://mapfean.38aaq5bo",
-    sourceLayer: "svallbard_glaciers2",
-    sourceId: "glaciers_17",
-    fillId: "glacier-fill-17",
-    highlightId: "glacier-highlight-17",
-  },
-  Oregon_10: {
-    url: "mapbox://mapfean.YOUR_TILESET_ID",
-    sourceLayer: "oregon_10_layer",
-    sourceId: "glaciers_10",
-    fillId: "glacier-fill-10",
-    highlightId: "glacier-highlight-10",
-  },
 };
 
-
 const getGlacierLabel = (props = {}) => {
+  if (props?.glacLabel?.trim()) return props.glacLabel.trim();
   if (props?.glac_name?.trim()) return props.glac_name.trim();
   if (props?.GLAC_NAME?.trim()) return props.GLAC_NAME.trim();
+  if (props?.GLACNAME?.trim()) return props.GLACNAME.trim();
   if (props?.Name?.trim()) return props.Name.trim();
   return "Name not found";
 };
+
+const glacierNameExpr = [
+  "coalesce",
+  ["get", "glacLabel"],
+  ["get", "glac_name"],
+  ["get", "GLAC_NAME"],
+  ["get", "GLACNAME"],
+  ["get", "Name"],
+];
 
 const getPopupHTML = (props) => {
   const glacLabel = getGlacierLabel(props);
@@ -61,7 +70,6 @@ const getPopupHTML = (props) => {
     </div>
   `;
 };
-
 
 export function useGlacierLayer({ mapRef, activeDataset }) {
   useEffect(() => {
@@ -101,7 +109,7 @@ export function useGlacierLayer({ mapRef, activeDataset }) {
               "fill-color": "#004d80",
               "fill-opacity": 0.7,
             },
-            filter: ["==", "Name", ""],
+            filter: ["==", glacierNameExpr, ""],
           });
         }
       });
@@ -128,15 +136,21 @@ export function useGlacierLayer({ mapRef, activeDataset }) {
           });
 
           if (!features.length) {
-            map.setFilter(active.highlightId, ["==", "Name", ""]);
+            map.setFilter(active.highlightId, ["==", glacierNameExpr, ""]);
             hoverPopup.remove();
             return;
           }
 
           const feature = features[0];
           const props = feature.properties;
+          const glacLabel = getGlacierLabel(props);
 
-          map.setFilter(active.highlightId, ["==", "Name", props.Name]);
+          map.setFilter(active.highlightId, [
+            "==",
+            glacierNameExpr,
+            glacLabel,
+          ]);
+
           hoverPopup
             .setLngLat(e.lngLat)
             .setHTML(getPopupHTML(props))
@@ -144,7 +158,7 @@ export function useGlacierLayer({ mapRef, activeDataset }) {
         });
 
         map.on("mouseleave", active.fillId, () => {
-          map.setFilter(active.highlightId, ["==", "Name", ""]);
+          map.setFilter(active.highlightId, ["==", glacierNameExpr, ""]);
           hoverPopup.remove();
         });
       }

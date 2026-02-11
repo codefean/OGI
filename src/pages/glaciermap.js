@@ -19,7 +19,7 @@ const GlacierMap = () => {
   const [pitch, setPitch] = useState(isMobile ? 40 : 50);
   const [bearing, setBearing] = useState(0);
   const [selectedMountain, setSelectedMountain] = useState("hood");
-  const [activeDataset, setActiveDataset] = useState("Oregon_23");
+  const [activeDataset, setActiveDataset] = useState("Oregon_25");
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
@@ -128,9 +128,9 @@ const resetZoom = useCallback(() => {
       <div className="dataset-selector">
         <label>Glacier Dataset:</label>
         <select value={activeDataset} onChange={(e) => setActiveDataset(e.target.value)}>
+          <option value="Oregon_25">2025</option>
           <option value="Oregon_23">2023</option>
           <option value="Oregon_17">2017</option>
-          <option value="Oregon_10">2010</option>
         </select>
       </div>
 
