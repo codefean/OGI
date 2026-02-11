@@ -10,7 +10,7 @@
   font-weight: bold;
   text-align: center;
   transition: background-color 0.2s ease;
-  margin-bottom: -28px;
+  margin-bottom: -47px;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -19,7 +19,6 @@
   }
 }
 
-/* Hide on mobile */
 @media (max-width: 768px) {
   .reset-button {
     display: none;
